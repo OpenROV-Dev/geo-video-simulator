@@ -1,0 +1,18 @@
+{
+  "name": "socket-video-h264",
+  "version": "0.9.0",
+  "homepage": "https://github.com/OpenROV-atoms/socket-video-h264",
+  "authors": [
+    "BrianAdams <brian@babastik.com>"
+  ],
+  "description": "Web Component that connects to a Socket.IO server source and displays the H.264 stream",
+  "main": "socket-video-h264.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
