@@ -6,8 +6,12 @@ var Camera = function(){
   var self = this;
 
   //test pattern
-  var ffmpeg_options = '-f lavfi -i testsrc=size=1920x1080:rate=30 -f mp4 -g 1 -movflags empty_moov+default_base_moof+frag_keyframe -tune zerolatency -';
-  var ffmpeg_initFrame_options = '-f lavfi -i testsrc=size=1920x1080:rate=30 -f mp4 -vframes 0 -g 1 -movflags empty_moov+default_base_moof+frag_keyframe -tune zerolatency -';
+//  var ffmpeg_options = '-threads 1 -f lavfi -i testsrc=size=1920x1080:rate=30 -f mp4 -g 1 -threads 1 -movflags empty_moov+default_base_moof+frag_keyframe -tune zerolatency -';
+  //Warning: A GOP of other than 1 will cache the frames in FFMPEG and send the entire package as a batch.
+//  var ffmpeg_options = '-threads 1 -f lavfi -re -i testsrc=size=160x200:rate=15 -f mp4 -g 1 -threads 1 -movflags empty_moov+default_base_moof+frag_keyframe -profile:v main -level 30 -pix_fmt yuv420p -tune zerolatency -';
+  var ffmpeg_options = '-threads 1 -f lavfi -re -i testsrc=size=640x360:rate=30:decimals=3 -f mp4 -g 1 -threads 2 -movflags empty_moov+default_base_moof+frag_keyframe -profile:v main -level 30 -pix_fmt yuv420p -tune zerolatency -';
+
+  var ffmpeg_initFrame_options = '-threads 1 -f lavfi -i testsrc=size=1920x1080:rate=30 -f mp4 -vframes 0 -g 1 -threads 1 -movflags empty_moov+default_base_moof+frag_keyframe -profile:v main -level 30 -pix_fmt yuv420p -tune zerolatency -';
   //future option?
   //lavfi mandelbrot=s=1920x1080:start_scale=1.689­12323178293021:end_pts=212:maxiter=42192­342
 
