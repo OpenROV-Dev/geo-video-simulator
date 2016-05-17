@@ -11,7 +11,6 @@ require('module').Module._initPaths();
 console.log("Set NODE_PATH to: "+process.env['NODE_PATH'] );
 
 var videoServer;
-var io = require('socket.io')(8099);
 var fs = require('fs');
 var options={'writeToDisk' : false};
 
@@ -24,6 +23,7 @@ var getOptions = function getOptions(args){
         resolution: process.env.GEO_RESOLUTION || '1920x1080',
         device: process.env.GEO_DEVICE || '/dev/video0',
         url: process.env.GEO_URL || ':'+8099+'/',
+        wspath: process.env.GEO_WSPATH || '/socket.io',
     };
     var argv = require('minimist')(args);
     return Object.assign(defaults,argv);
@@ -32,6 +32,8 @@ var getOptions = function getOptions(args){
 
 
 options = getOptions(process.argv.slice(2));
+
+var io = require('socket.io')(options.port,{path:options.wspath});
 
 var camera
   camera = require("mock-camera.js");
