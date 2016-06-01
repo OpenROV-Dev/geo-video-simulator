@@ -13,10 +13,8 @@ process.env['NODE_PATH'] = __dirname + '/modules:' + oldpath;
 require('module').Module._initPaths();
 
 var spawn 		= require('child_process').spawn;
-var zmq			= require('zmq');
 var log       	= require('debug')( 'app:log' );
 var error		= require('debug')( 'app:error' );
-
 
 // Get command line arguments
 var argv = require( "yargs" )
