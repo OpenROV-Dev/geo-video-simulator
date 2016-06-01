@@ -12,9 +12,10 @@ if( process.env[ 'NODE_PATH' ] !== undefined )
 process.env['NODE_PATH'] = __dirname + '/modules:' + oldpath;
 require('module').Module._initPaths();
 
-var spawn 		= require('child_process').spawn;
-var log       	= require('debug')( 'app:log' );
-var error		= require('debug')( 'app:error' );
+var spawn 			= require('child_process').spawn;
+var log       		= require('debug')( 'app:log' );
+var error			= require('debug')( 'app:error' );
+var EventEmitter    = require('events').EventEmitter;
 
 // Get command line arguments
 var argv = require( "yargs" )
@@ -38,7 +39,6 @@ var daemonsStarted	= false;
 var writeToDisk     = false;
 var mockRegServer   = new EventEmitter();
 var mockDaemon      = new EventEmitter();
-var EventEmitter    = require('events').EventEmitter;
 var defaults		= {};
 
 // Validate and set arguments
