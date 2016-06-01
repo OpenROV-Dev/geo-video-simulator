@@ -12,67 +12,77 @@ if( process.env[ 'NODE_PATH' ] !== undefined )
 process.env['NODE_PATH'] = __dirname + '/modules:' + oldpath;
 require('module').Module._initPaths();
 
-var defaults = 
-{
-	port: 		process.env.GEO_PORT || 8099,
-	url: 		process.env.GEO_URL || ':' + 8099 + '/',
-	wspath: 	process.env.GEO_WSPATH || '/geovideo',
-};
+var spawn 		= require('child_process').spawn;
+var zmq			= require('zmq');
+var log       	= require('debug')( 'app:log' );
+var error		= require('debug')( 'app:error' );
 
-var spawn 		    = require('child_process').spawn;
-var log       	    = require('debug')( 'app:log' );
-var error		    = require('debug')( 'app:error' );
-var argv 		    = require('minimist')( process.argv );
-var fs              = require('fs');
+
+// Get command line arguments
+var argv = require( "yargs" )
+	.usage( "Usage: $0 -c [cam0] [cam1] [camX] -p [port number] -u [relative url] -w [socket.io path]" )
+	.array( "c" )
+	.number( "p" )
+	.string( "u" )
+	.string( "w" )
+	.demand( [ "c", "p", "u", "w" ] )
+	.fail( function (msg, err) 
+	{
+		error( "Error parsing arguments: " + msg );
+		error( "Exiting..." );
+		process.exit(1);
+	})
+	.argv;
+
+var bootedCameras 	= [];
+var cameras         = {};
+var daemonsStarted	= false;
+var writeToDisk     = false;
+var mockRegServer   = new EventEmitter();
+var mockDaemon      = new EventEmitter();
 var EventEmitter    = require('events').EventEmitter;
+var defaults		= {};
 
-var server		    = require('http').createServer();
+// Validate and set arguments
+try
+{	
+	bootedCameras = argv.c;
+	
+	if( bootedCameras.length == 0 )
+	{
+		throw "No cameras specified";
+	}
+	
+	// -p=<port number>
+	defaults.port 	= argv.p;
+	
+	// -u=<relative url>
+	defaults.url 	= argv.u;
+	
+	// -w=<ws path>
+	defaults.wspath = argv.w;
+}
+catch( err )
+{
+	error( "Error parsing arguments: " + err );
+	error( "Exiting..." );
+	process.exit(1);
+}
+
+var server		= require('http').createServer();
 server.listen( defaults.port, function () 
 {
-  console.log( 'Geo Video Simulator Listening on ' + defaults.port );
+  console.log( 'Geo Video Server Listening on ' + defaults.port );
 })
 
-var plugin 		    = require('socket.io')(server,{origins: '*:*',path:defaults.wspath });
+var plugin 		= require('socket.io')(server,{origins: '*:*',path:defaults.wspath });
 
-var mockDaemon      = new EventEmitter();
-
-var deps 		    =
+var deps 		=
 {
 	server: server,
 	plugin: plugin,
 	defaults: defaults,
-    daemon: mockDaemon
-}
-var bootedCameras 	= [];
-var daemonsStarted	= false;
-var writeToDisk     = false;
-var mockRegServer   = new EventEmitter();
-var cameras         = {};
-
-// Get options
-try
-{
-	var camOption = argv.c;
-	var withoutBraces = argv.c.replace(/\[|\]/gi,'' );
-	
-	if( withoutBraces === "" )
-	{
-		throw "No cameras specified";
-	}
-
-    bootedCameras = withoutBraces.split( ',' );
-    
-    if( bootedCameras === undefined || bootedCameras.length == 0 )
-    {
-        throw "No cameras specified";
-    }
-    
-    writeToDisk = argv.writeToDisk;
-}
-catch( err )
-{
-	error( "No cameras specified! Ending program!" );
-	throw "Error getting camera list: " + err;
+	daemon: mockDaemon
 }
 
 // Handle camera/channel registrations
