@@ -60,7 +60,9 @@ var Camera = function( cameraOffset, deps )
     	
 	function SendCommand( command, params )
 	{
-		console.log( "Mock sending camera command: " + command );
+		log( "Mock sending camera command: " + command );
+        
+        // TODO
 	};
 };
 util.inherits(Camera, EventEmitter);

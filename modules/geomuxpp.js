@@ -14,7 +14,7 @@ var Geomuxpp = function( deps, camera, channel )
 
   child.stdout.on('data', function(data)
   {
-    if( self.initFrame === null )
+    if( initFrame === null )
 	  {
       initBuffer = initBuffer == null ? data : Buffer.concat( [initBuffer,data] );
 	  
@@ -23,8 +23,8 @@ var Geomuxpp = function( deps, camera, channel )
         return;
       }
 	  
-      self.initFrame = initBuffer;
-      daemon.emit( "init." + camera + "_" + channel, data );
+      initFrame = initBuffer;
+      daemon.emit( "init." + camera + "_" + channel, initFrame );
       return;
     }
 
@@ -43,8 +43,11 @@ var Geomuxpp = function( deps, camera, channel )
   
   child.stderr.on('data', function(error)
   {
-  	//  console.log(error.toString());
+  	  // console.log("FFMPEG: " + error.toString());
   });
 }
 
-module.exports = new Geomuxpp( deps, camera, channel );
+module.exports = function( deps, camera, channel ) 
+{
+  	return new Geomuxpp( deps, camera, channel );
+};

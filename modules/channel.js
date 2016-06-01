@@ -1,4 +1,3 @@
-var zmq				= require('zmq');
 var EventEmitter    = require('events').EventEmitter;
 var util            = require('util');
 
@@ -115,6 +114,7 @@ var Channel = function( camera, channelNum )
 	setInterval( function()
 	{
 		SendChannelCommand( "report_health" );
+		// TODO
 	}, 5000 );
 	
 	// ----------------
@@ -122,12 +122,14 @@ var Channel = function( camera, channelNum )
 	
 	function SendChannelCommand( command, params )
 	{
-		console.log( "Mock sending channel command: " + command );
+		log( "Mock sending channel command: " + command );
+		// TODO
 	};
 	
 	function ApplySettings( settings )
 	{
-		console.log( "Mock applying channel settings: " + JSON.stringify( settings ) );
+		log( "Mock applying channel settings: " + JSON.stringify( settings ) );
+		// TODO
 	};
 };
 util.inherits(Channel, EventEmitter);

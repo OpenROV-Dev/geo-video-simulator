@@ -96,7 +96,7 @@ mockRegServer.on( "registration", function( registration )
                 setTimeout( function()
                 {
                     var geomuxpp = require( "geomuxpp.js" )( deps, registration.camera, registration.channel );
-                }, 3000 );
+                }, 1000 );
 			} );
 		}
 	}
@@ -142,7 +142,7 @@ plugin.on( "connection", function( client )
                     // Mock receipt of channel registration
                     mockRegServer.emit( "registration", { type: "channel_registration", camera: "0", channel: "0" } );
                 }, 1000 );
-            }, 5000 );
+            }, 1000 );
 		}
 	} );
 } );
