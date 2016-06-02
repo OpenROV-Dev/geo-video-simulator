@@ -51,13 +51,8 @@ try
 		throw "No cameras specified";
 	}
 	
-	// -p=<port number>
 	defaults.port 	= argv.p;
-	
-	// -u=<relative url>
 	defaults.url 	= argv.u;
-	
-	// -w=<ws path>
 	defaults.wspath = argv.w;
 }
 catch( err )
