@@ -123,7 +123,11 @@ var Channel = function( camera, channelNum )
 	function SendChannelCommand( command, params )
 	{
 		log( "Mock sending channel command: " + command );
-		// TODO
+		
+		if( command === "apply_settings" )
+		{
+			ApplySettings( params.settings );
+		}
 	};
 	
 	function ApplySettings( settings )
